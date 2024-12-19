@@ -1,0 +1,193 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+#  - release/dev/v1
+#  - release/test/*
+   - sonarqube
+pool:
+  vmImage: ubuntu-latest
+parameters:
+- name: 'environment'
+  type: string
+  default: 'dev'
+  values:
+  - 'dev'
+  - 'dev02'
+  - 'ptest'
+  - 'preprod'
+  - 'prod'
+  - 'uat'
+  - 'test'
+variables:
+  - group:  ${{ parameters.environment }}-variable-group-iAgri
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: dockerfilePath
+    value: './Dockerfile'
+  - name: buildContext
+    value: '$(build.artifactstagingdirectory)'
+  - name: repo
+    value: preprod-survey
+  - name : environment
+    value: ${{ parameters.environment }}
+  - group: sonarqube-variable-group     
+  # - name: aksserviceconnection
+  #   #value: 'KSHEMA_POC_2_DEFAULT_NS'
+  #   value: 'ptest01cluster'
+ 
+
+stages: 
+  - stage: build
+    jobs:
+      - job: 
+        steps:
+          - script: |
+             default_branch=$(echo $(Build.SourceBranch) | sed 's|refs/heads/||')
+             echo $(Build.SourceBranch)
+             echo $(default_branch)
+             export AZURE_DEVOPS_EXT_PAT=$(AZURE_DEVOPS_PAT)
+             az devops configure --defaults organization=https://dev.azure.com/Kshema
+             az repos update --repository "survey-Service" --default-branch "$default_branch" --project "iAgri_2.0"
+            displayName: "Set Default Branch in Azure DevOps"
+        # condition: eq(variables.environment, 'dev')
+        # Step 2: Prepare SonarQube environment
+          - task: SonarQubePrepare@7
+            inputs:
+              SonarQube: 'iagri-sonarube-svc'
+              scannerMode: 'CLI'
+              cliScannerVersion: '6.2.1.4610'
+              configMode: 'file'
+              configFile: 'sonar-project.properties'
+              extraProperties: |
+                # sonar.leak.period=2024-11-04
+                # sonar.issue.ignore.multicriteria=e1
+                # sonar.issue.ignore.multicriteria.e1.ruleKey=coverage
+                # sonar.issue.ignore.multicriteria.e1.resourceKey=**/*
+                sonar.scm.exclusions.disabled=true
+                # sonar.projectDate=2024-11-04
+                # sonar.issue.ignore.multicriteria=e1,e2
+                # sonar.issue.ignore.multicriteria.e2.ruleKey=coverage
+                # sonar.issue.ignore.multicriteria.e2.resourceKey=**/*
+                # sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                #sonar.qualitygate.wait=true
+                #codeCoverageToolOption: "JaCoCo" 
+                # sonar.web.systemPasscode=sqa_f2bb58df48d7ccfa10bb02947092a2fbc0bd9e44
+              displayName: "Sonarqube Preparation"   
+  
+          - task: Maven@4
+            inputs:
+                mavenPomFile: 'pom.xml'
+                goals: 'clean package sonar:sonar'
+                publishJUnitResults: true
+                testResultsFiles: '**/surefire-reports/TEST-*.xml'
+                javaHomeOption: 'JDKVersion'
+                jdkVersionOption: '1.17'
+                mavenVersionOption: 'Default'
+                mavenOptions: '-Xmx3072m'
+                mavenAuthenticateFeed: false
+                effectivePomSkip: false
+                sonarQubeRunAnalysis: true
+          - task: SonarQubePublish@7
+            inputs:
+              pollingTimeoutSec: '300'
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'      
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+            inputs:
+              SourceFolder: '$(system.defaultworkingdirectory)'
+              Contents: |
+               **/target/*.jar
+               **/newrelic/newrelic.jar
+              TargetFolder: '$(build.artifactstagingdirectory)'
+          
+          - task: PublishBuildArtifacts@1    
+            displayName: 'Publish Artifact: drop'
+            inputs:
+              PathtoPublish: '$(build.artifactstagingdirectory)' 
+          - script: |
+                echo "Logging in to Azure Container Registry..."
+                docker login $(containerRegistry) -u $(username) -p $(password)
+                echo "Building and pushing Docker image..."
+                docker build -t $(containerRegistry)/$(repo):$(tag) --build-arg SURVEY_SVC_DB_URL=${SURVEY_SVC_DB_URL} --build-arg SURVEY_SVC_DB_USERNAME=${SURVEY_SVC_DB_USERNAME} --build-arg SURVEY_SVC_DB_PASSWORD=${SURVEY_SVC_DB_PASSWORD} --build-arg IAGRI_AZURE_URL=${IAGRI_AZURE_URL} --build-arg IAGRI_AUTH_URL=${IAGRI_AUTH_URL} --build-arg IAGRI_CLIENTID=${IAGRI_CLIENTID} --build-arg IAGRI_CLIENT_SECRET=${IAGRI_CLIENT_SECRET} -f $(dockerfilePath) $(buildContext)
+                docker push $(containerRegistry)/$(repo):$(tag)
+            displayName: 'Login, Build and Push Docker Image'
+          # Step 4:    
+          - task: PublishCodeCoverageResults@1
+            #condition: eq(variables.environment, 'dev')
+            inputs:
+             codeCoverageTool: 'JaCoCo'
+             summaryFileLocation: 'target/site/jacoco/jacoco.xml'
+
+              # Step 5: Enforce Quality Gates (Code Coverage >= 60% and other metrics)
+          - task: PowerShell@2
+            #condition: eq(variables.environment, 'dev')
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Path to the SonarQube report file
+                # ls -la $(SONAR_SCANNER_REPORTTASKFILE)
+                echo "---------------------------------"
+                cat $(SONAR_SCANNER_REPORTTASKFILE)
+                echo "---------------------------------"
+                $analysisId = "$(SONAR_SCANNER_REPORTTASKFILE)" 
+                                
+                # Retrieve the quality gate status (e.g., OK, ERROR)
+                $qualityGateStatus = (Select-String -Path $analysisId -Pattern "status").Line -replace "status=", ""
+                Write-Host "Quality Gate Status: $qualityGateStatus"
+
+                # Check additional quality gate metrics (e.g., code coverage, bugs)
+                $coverage = (Select-String -Path $analysisId -Pattern "coverage").Line -replace "coverage=", ""
+                $bugs = (Select-String -Path $analysisId -Pattern "bugs").Line -replace "bugs=", ""
+                $vulnerabilities = (Select-String -Path $analysisId -Pattern "vulnerabilities").Line -replace "vulnerabilities=", ""
+                $codeSmells = (Select-String -Path $analysisId -Pattern "code_smells").Line -replace "code_smells=", ""
+                $duplicatedLinesDensity = (Select-String -Path $analysisId -Pattern "duplicated_lines_density").Line -replace "duplicated_lines_density=", ""
+                
+                Write-Host "Code Coverage: $coverage%"
+                Write-Host "Bugs: $bugs"
+                Write-Host "Vulnerabilities: $vulnerabilities"
+                Write-Host "Code Smells: $codeSmells"
+                Write-Host "Duplicated Lines Density: $duplicatedLinesDensity%"
+
+                # Fail the build if the quality gate is not met
+                if ($qualityGateStatus -ne "OK" -or [double]$coverage -lt 60) {
+                  Write-Error "SonarQube Quality Gate failed. Coverage is less than 60% or other quality gates are not met."
+                }
+            displayName: "Enforce Quality Gate: Fail if Criteria Not Met"
+      
+ 
+  # - stage: Deploy
+  #   pool:
+  #     vmImage: ubuntu-latest
+  #   displayName: Deploy stage
+  #   dependsOn: build
+  #   condition: or(eq(variables.environment, 'dev'), eq(variables.environment, 'dev02'))
+  #   jobs:
+  #   - deployment: Deploy
+  #     displayName: Deploy job
+  #     environment: 'dev' #customize with your environment
+  #     strategy:
+  #       runOnce:
+  #         deploy:
+  #           steps:
+  #           - checkout: self
+  #           - script: |
+  #                 set -e 
+  #                 sed -i 's/{{REGISTRY01xy}}/$(containerRegistry)/g' $(Build.SourcesDirectory)/deployment.yaml
+  #                 sed -i 's/{{REPO01}}/$(repo)/g' $(Build.SourcesDirectory)/deployment.yaml
+  #                 sed -i 's/{{TAG01}}/$(tag)/g' $(Build.SourcesDirectory)/deployment.yaml
+  #             displayName: 'Replace tag placeholder'
+            
+  #           - task: KubernetesManifest@0
+  #             displayName: Deploy to Kubernetes cluster
+  #             inputs:
+  #               action: 'deploy'
+  #               kubernetesServiceConnection: '$(aksserviceconnection)'
+  #               namespace: 'default'
+  #               manifests: '$(Build.SourcesDirectory)/deployment.yaml'
+  #               rolloutStatusTimeout: '3000'

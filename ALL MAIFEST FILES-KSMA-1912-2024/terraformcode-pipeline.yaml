@@ -1,0 +1,108 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+- name: 'environment'
+  type: string
+  default: 'dev'
+  values:
+  - 'dev'
+  - 'ptest'
+  - 'preprod'
+  - 'prod'
+  - 'uat'
+  - 'test'
+- name: 'TF_LOG'
+  type: string
+  default: 'ERROR'
+  values:
+  - 'ERROR'
+  - 'WARN'
+  - 'INFO'
+  - 'DEBUG'
+  - 'TRACE'
+
+variables:
+  - group: ${{ parameters.environment }}-azuresp
+  - name: environment
+    value: ${{ parameters.environment }}
+  - name: ARM_CLIENT_ID
+    value: $(clientId)
+  - name: ARM_CLIENT_SECRET
+    value: $(clientSecret)
+  - name: ARM_SUBSCRIPTION_ID
+    value: $(subscriptionId)
+  - name: ARM_TENANT_ID
+    value: $(tenantId)
+
+stages:
+- stage: TerraformInit
+  jobs:
+  - job: Init
+    steps:
+    - script: |
+        az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
+        az account set --subscription $(ARM_SUBSCRIPTION_ID)
+        az account show
+      displayName: 'Azure Login'
+    - script: |
+        wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt update && sudo apt install terraform
+      displayName: 'Install Terraform'
+
+- stage: TerraformPlan
+  dependsOn: TerraformInit
+  jobs:
+  - job: Plan_${{ parameters.environment }}
+    steps:
+    - script: |
+        export TF_LOG=${{ parameters.TF_LOG }}
+        terraform init
+        az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
+        az account set --subscription $(ARM_SUBSCRIPTION_ID)
+        terraform plan -out=tfplan \
+          -var-file=${{ parameters.environment }}-variables.tfvars \
+          -var "client_id=$(ARM_CLIENT_ID)" \
+          -var "client_secret=$(ARM_CLIENT_SECRET)" \
+          -var "tenant_id=$(ARM_TENANT_ID)" \
+          -var "subscription_id=$(ARM_SUBSCRIPTION_ID)"
+      displayName: 'Terraform Plan'
+    - publish: tfplan
+      artifact: terraform-plan
+
+- stage: ManualIntervention
+  dependsOn: TerraformPlan
+  jobs:
+  - job: WaitForApproval1
+    pool: server
+    steps:
+    - task: ManualValidation@0
+      inputs:
+        notifyUsers: 'triveni.n@kshema.co;muralikrishna.p@kshema.co'
+        instructions: 'Please review the Terraform plan and approve to proceed with apply.'
+
+  - job: WaitForApproval2
+    dependsOn: WaitForApproval1
+    pool: server
+    steps:
+    - task: ManualValidation@0
+      inputs:
+        notifyUsers: 'muralikrishna.p@kshema.co'
+        instructions: 'Please review the Terraform plan and approve to proceed with apply.'
+
+- stage: TerraformApply
+  dependsOn: ManualIntervention
+  jobs:
+  - job: Apply
+    steps:
+    - download: current
+      artifact: terraform-plan
+    - script: |
+        export TF_LOG=${{ parameters.TF_LOG }}
+        terraform init
+        terraform apply -auto-approve $(Pipeline.Workspace)/terraform-plan/tfplan
+      displayName: 'Terraform Apply'

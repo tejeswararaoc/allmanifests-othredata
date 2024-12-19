@@ -1,0 +1,103 @@
+trigger:
+- release/dev/* 
+- release/test/*  
+#  - sonar-intigration
+pool:
+  vmImage: 'ubuntu-latest' 
+variables:
+  - name: variableGroup
+    ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/test/') }}:
+      value: uat-kiosk-ui
+    ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/ptest/') }}:
+      value: ptest-kiosk-ui
+    ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/preprod/') }}:
+      value: preprod-kiosk-ui
+    ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/prod/') }}:
+      value: prod-kiosk-ui
+    ${{ else }}:
+      value: dev-kiosk-ui
+  - group: ${{ variables['variableGroup'] }} 
+  - group: dev-sonarqube-variable
+  # - name: tag
+  #   value: '$(Build.BuildId)'
+  # - name: dockerfilePath
+  #   value: 'Dockerfile'
+  # - name: buildContext
+  #   value: '$(build.artifactstagingdirectory)'
+  - name: repo
+    value: kiosk-ui 
+
+stages:
+  - stage: Build
+    displayName: 'Build stage'
+    jobs:
+      - job: Build
+        displayName: 'Build'
+        steps: 
+        - script: echo $(Build.SourceBranch)
+        - script: |
+            default_branch=$(echo $(Build.SourceBranch) | sed 's|refs/heads/||')
+            echo $(Build.SourceBranch)
+            echo $(default_branch)
+            export AZURE_DEVOPS_EXT_PAT=$(AZURE_DEVOPS_PAT)
+            az devops configure --defaults organization=https://dev.azure.com/Kshema
+            az repos update --repository "kiosk-ui" --default-branch "$default_branch" --project "Kiosk"
+          displayName: "Set Default Branch in Azure DevOps"
+          condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/dev/'))
+          
+        - task: NodeTool@0
+          displayName: 'Use Node 20.x'
+          inputs:
+            versionSource: 'spec'
+            versionSpec: '20.x'
+            checkLatest: true 
+        - script: |
+            npm install 
+            npm install sonarqube-scanner --save-dev
+            npm run build
+        - task: SonarQubePrepare@7
+          inputs:
+            SonarQube: $(sonar_svc)
+            scannerMode: 'CLI'
+            configMode: 'manual'
+            cliProjectKey: $(cliProjectKey)
+            cliProjectName: $(cliProjectName)     
+            extraProperties: |
+              sonar.sources=. 
+              sonar.javascript.lcov.reportPaths=coverage/lcov.info 
+              sonar.host.url=$(SONAR_HOST_URL)
+              sonar.login=$(SONAR_TOKEN) 
+          condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/dev/'))
+          displayName: 'Prepare analysis on SonarQube' 
+        - script: |
+            npx sonarqube-scanner -X \
+              -Dsonar.projectKey=Kshema-Kiosk \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=$(SONAR_HOST_URL) \
+              -Dsonar.login=$(SONAR_TOKEN) 
+          condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/dev/'))
+          displayName: 'Run SonarQube Analysis'
+
+        - task: SonarQubePublish@7
+          inputs:
+            pollingTimeoutSec: '300' 
+          condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/dev/'))
+          displayName: 'Publish SonarQube results' 
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Artifacts'
+          inputs:
+            pathtoPublish: 'build'
+            artifactName: 'build'
+            publishLocation: 'Container'
+        - script: ls -la $(Build.SourcesDirectory)
+          displayName: 'List contents of build directory'
+          
+        - task: AzureCLI@2
+          displayName: 'Azure CLI - Upload Files in Blob Container'
+          inputs:
+            azureSubscription: $(azureSubscription)
+            scriptType: 'bash' 
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              az storage blob upload-batch --destination '$web' --account-name $(account-name) --account-key "$(account-key)" --overwrite --source $(Build.SourcesDirectory)/build
+              

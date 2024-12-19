@@ -1,0 +1,94 @@
+trigger:
+  - release/test/*
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: variableGroup
+    ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/test/') }}:
+      value: uat-kioskservice-variable-group
+    ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/ptest/') }}:
+      value: ptest-variable-group
+    ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/preprod/') }}:
+      value: preprod-variable-group
+    ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/prod/') }}:
+      value: prod-variable-group
+    ${{ else }}:
+      value: dev-variable-group
+  - group: ${{ variables['variableGroup'] }}
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: dockerfilePath
+    value: 'Dockerfile'
+  - name: buildContext
+    value: '$(build.artifactstagingdirectory)'
+  - name: repo
+    value: kiosk-service
+
+stages: 
+  - stage: build
+    jobs:
+      - job: 
+        steps:
+          - task: Maven@4
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'clean install -DskipTests'
+              # mvn clean install -DskipTests
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+              mavenVersionOption: 'Default'
+              mavenOptions: '-Xmx3072m'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false 
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+            inputs:
+              SourceFolder: '$(system.defaultworkingdirectory)'
+              Contents: |
+               **/target/*.jar
+               **/newrelic/*.jar
+              TargetFolder: '$(build.artifactstagingdirectory)'
+          - script: |
+                echo "Logging in to Azure Container Registry..." 
+                echo "building docker image for $(environment) environment"
+                docker login $(containerRegistry) -u $(username) -p $(password)
+                echo "Building and pushing Docker image..."
+                docker build -t $(containerRegistry)/$(repo):$(tag) \
+                 --build-arg SPRING_APPLICATION_NAME=${SPRING_APPLICATION_NAME} \
+                 --build-arg SPRING_PROFILE=${SPRING_PROFILE} \
+                 --build-arg LOCALHOST=${LOCALHOST} \
+                 --build-arg SWAGGER_TEST_HOST=${SWAGGER_TEST_HOST} \
+                 --build-arg SWAGGER_DEV_HOST=${SWAGGER_DEV_HOST} -f $(dockerfilePath) $(buildContext)
+                docker push $(containerRegistry)/$(repo):$(tag)
+            displayName: ' $(environment) - Login, Build and Push Docker Image'
+       
+            
+  - stage: Deploy_to_uat
+    displayName: Deploy to UAT Environment
+    dependsOn: Build
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/test/')
+    jobs:
+      - job:
+        steps:
+          - checkout: self
+          - script: |
+              set -e
+              sed -i 's/{{REGISTRY01xy}}/$(containerRegistry)/g' $(Build.SourcesDirectory)/deployment/uat-deployment.yaml
+              sed -i 's/{{REPO01}}/$(repo)/g' $(Build.SourcesDirectory)/deployment/uat-deployment.yaml
+              sed -i 's/{{TAG01}}/$(tag)/g' $(Build.SourcesDirectory)/deployment/uat-deployment.yaml
+            displayName: 'Replace tag placeholder'
+          
+          - task: KubernetesManifest@1
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: '$(aksserviceconnection)'
+              namespace: 'kiosk'
+              manifests: '$(Build.SourcesDirectory)/deployment/uat-deployment.yaml'
+              rolloutStatusTimeout: '3000'
+              arguments: |
+                --validate=false

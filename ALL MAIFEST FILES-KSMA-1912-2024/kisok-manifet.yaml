@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kiosk
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uat-kiosk
+  namespace: kiosk
+spec:
+  minReadySeconds: 20
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kiosk
+  strategy:
+    rollingUpdate:
+      maxSurge: 25
+      maxUnavailable: 25
+    type: RollingUpdate
+  template:
+    metadata:
+      name: kiosk
+      labels:
+        app: kiosk
+    spec:
+      containers:
+        - image: {{REGISTRY01xy}}/{{REPO01}}:{{TAG01}}
+          name: kiosk 
+          resources:
+            requests:
+               memory: "64Mi"
+               cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+           - containerPort: 8765
+      imagePullSecrets:
+        - name: mykshema-poc2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uat-kiosk-svc
+  namespace: kiosk
+spec:
+  selector:
+    app: kiosk
+  ports:
+    - name: appport
+      port: 80
+      targetPort: 8765

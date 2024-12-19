@@ -1,0 +1,147 @@
+trigger:
+  - release/dev/*
+  - release/test/*
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+    - name: variableGroup
+      ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/test/') }}:
+       value: uat-endorsement
+      ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/ptest/') }}:
+        value: ptest-endorsement
+      ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/preprod/') }}:
+        value: preprod-endorsement
+      ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/heads/release/production/') }}:
+        value: prod-endorsement
+      ${{ else }}:
+        value: dev-endorsement
+    - group: ${{ variables['variableGroup'] }}
+    - name: tag
+      value: '$(Build.BuildId)'
+    - name: dockerfilePath
+      value: 'deployment/Dockerfile'
+    - name: buildContext
+      value: '$(build.artifactstagingdirectory)'
+    - name: repo
+      value: opt-kshema
+
+stages: 
+  - stage: build
+    jobs:
+      - job: 
+        steps:
+          - task: Maven@4
+            inputs:
+              options: '-DskipTests'
+              mavenPomFile: 'pom.xml'
+              goals: 'clean package'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+              mavenVersionOption: 'Default'
+              mavenOptions: '-Xmx3072m'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+            inputs:
+              SourceFolder: '$(system.defaultworkingdirectory)'
+              Contents: |
+               **/target/*.jar
+               **/newrelic/newrelic.jar
+               **/newrelic/newrelic.yml
+              TargetFolder: '$(build.artifactstagingdirectory)'
+          
+          - task: PublishBuildArtifacts@1    
+            displayName: 'Publish Artifact: drop'
+            inputs:
+              PathtoPublish: '$(build.artifactstagingdirectory)' 
+          - script: |
+                echo "Logging in to Azure Container Registry..."
+                docker login $(containerRegistry) -u $(username) -p $(password)
+                echo "Building and pushing Docker image..."
+                docker build -t $(containerRegistry)/$(repo):$(tag) \
+                    --build-arg IAGRI_DB_URL=${IAGRI_DB_URL} \
+                    --build-arg IAGRI_DB_USERNAME=${IAGRI_DB_USERNAME} \
+                    --build-arg IAGRI_DB_PASSWORD=${IAGRI_DB_PASSWORD} \
+                    --build-arg AZURE_FILE_SERVICE_HOST=${AZURE_FILE_SERVICE_HOST} \
+                    --build-arg DPF_URL=${DPF_URL} \
+                    --build-arg PYTHON_DPF_URL=${PYTHON_DPF_URL} \
+                    --build-arg EXOTEL_URL=${EXOTEL_URL} \
+                    --build-arg AREA_UNIT_SCHEDULER_RATE=${AREA_UNIT_SCHEDULER_RATE} \
+                    --build-arg NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY} \
+                    --build-arg NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME} \
+                    --build-arg CMS_CLIENT_ID=${CMS_CLIENT_ID} \
+                    --build-arg CMS_TOKEN_CLIENT_SECRET=${CMS_TOKEN_CLIENT_SECRET} \
+                    --build-arg CMS_TOKEN_SCOPE=${CMS_TOKEN_SCOPE} \
+                    --build-arg CMS_TOKEN_GRANT_TYPE=${CMS_TOKEN_GRANT_TYPE} \
+                    --build-arg MICROSOFT_TOKEN_URL=${MICROSOFT_TOKEN_URL} \
+                    --build-arg CMS_TOKEN_URL=${CMS_TOKEN_URL} \
+                    --build-arg CMS_CLAIM_SEARCH_API=${CMS_CLAIM_SEARCH_API} \
+                    --build-arg JAVA_TOOL_OPTIONS=${PROFILE} \
+                    --build-arg SWAGGER_POC_HOST=${SWAGGER_POC_HOST} \
+                    --build-arg SWAGGER_UAT_HOST=${SWAGGER_UAT_HOST} \
+                    --build-arg FIELD_ASSIST_URL=${FIELD_ASSIST_URL} \
+                    --build-arg ENDORSEMENT_GENERATION_URL=${ENDORSEMENT_GENERATION_URL} \
+                    -f $(dockerfilePath) $(buildContext)
+                docker push $(containerRegistry)/$(repo):$(tag)
+            displayName: 'Login, Build and Push Docker Image'
+
+  - stage: Deploy_to_dev
+    displayName: Deploy to POC Environemt
+    dependsOn: Build
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/dev/')
+    jobs:
+      - job:
+        steps:
+              - checkout: self
+              - task: KubernetesManifest@0
+                inputs:
+                  action: 'createSecret'
+                  kubernetesServiceConnection: '$(aksserviceconnection)'
+                  namespace: 'default'
+                  secretType: 'dockerRegistry'
+                  secretName: 'mykshema-poc2'
+                  dockerRegistryEndpoint: 'kshemapoc-acr'
+              - script: |
+                    set -e
+                    sed -i 's/{{TAG01}}/$(tag)/g' $(Build.SourcesDirectory)/deployment/dev-deployment.yaml
+                    sed -i 's/{{REPO01}}/$(repo)/g' $(Build.SourcesDirectory)/deployment/dev-deployment.yaml
+                displayName: 'Replace tag placeholder'
+              
+              - task: KubernetesManifest@0
+                displayName: Deploy to Kubernetes cluster
+                inputs:
+                  action: 'deploy'
+                  kubernetesServiceConnection: '$(aksserviceconnection)'
+                  namespace: 'default'
+                  manifests: '$(Build.SourcesDirectory)/deployment/dev-deployment.yaml'
+                  rolloutStatusTimeout: '3000'
+
+  - stage: Deploy_to_UAT
+    displayName: Deploy to UAT Environemt
+    dependsOn: Build
+    pool: kshema-uat-build
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/test/') 
+    jobs:
+      - job:
+        steps:
+              - checkout: self
+
+              - script: |
+                    set -e
+                    sed -i 's/{{TAG01}}/$(tag)/g' $(Build.SourcesDirectory)/deployment/uat-deployment.yaml
+                    sed -i 's/{{REPO01}}/$(repo)/g' $(Build.SourcesDirectory)/deployment/uat-deployment.yaml
+                displayName: 'Replace tag placeholder'
+              
+              - task: KubernetesManifest@0
+                displayName: Deploy to Kubernetes cluster
+                inputs:
+                  action: 'deploy'
+                  kubernetesServiceConnection: '$(aksserviceconnection)'
+                  namespace: 'default'
+                  manifests: '$(Build.SourcesDirectory)/deployment/uat-deployment.yaml'
+                  rolloutStatusTimeout: '3000'
