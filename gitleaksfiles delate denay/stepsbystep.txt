@@ -1,0 +1,51 @@
+Clone the repository in your local
+
+Copy two files “add_gitleaks_toml_to_all_branches.sh” and “precommitconfig.sh”
+
+After copying edit add_gitleaks_toml_to_all_branches.sh and change toml file path where it is in your local drive
+image.png
+
+Edit precommitconfig.sh and add repo names
+
+image.png
+change here according to the project
+
+image.png
+
+After copying the 2 files in local repo execute it by using git bash
+
+After executing the two files please check in repo two files are reflecting or not.
+
+Add stage to the working pipeline
+stages:
+
+stage:
+jobs:
+job: run_gitleaks
+steps:
+**** Install Gitleaks (if needed, otherwise omit if using the Azure DevOps extension)
+- script: |
+echo "Downloading Gitleaks using wget..."
+wget -O gitleaks https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks-linux-amd64  echo "Checking file type..."
+file gitleaks
+echo "Making Gitleaks executable..."
+chmod +x gitleaks
+displayName: 'Install Gitleaks'
+**** Run Gitleaks scan using the Azure DevOps extension
+- task: Foxholenl.Gitleaks.foxholenl-gitleaks.Gitleaks@2
+displayName: 'Gitleaks scan'
+inputs:
+configtype: custom
+scanmode: all
+reportformat: csv
+configfile: '$(Build.SourcesDirectory)/.gitleaks.toml'
+
+reportpath: '$(Build.ArtifactStagingDirectory)/gitleaks.csv'
+# Publish Gitleaks report as an artifact
+
+task: PublishBuildArtifacts@1
+displayName: 'Publish Gitleaks Report'
+inputs:
+PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+ArtifactName: 'gitleaks-report'
+publishLocation: 'Container'

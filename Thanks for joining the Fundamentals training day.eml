@@ -1,0 +1,667 @@
+Received: from PN3PPFC54389AFF.INDP287.PROD.OUTLOOK.COM (2603:1096:c04:1::ce)
+ by MA0P287MB0250.INDP287.PROD.OUTLOOK.COM with HTTPS; Wed, 16 Oct 2024
+ 11:48:17 +0000
+Received: from PN2PR01CA0025.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:25::30)
+ by PN3PPFC54389AFF.INDP287.PROD.OUTLOOK.COM (2603:1096:c04:1::ce) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.22; Wed, 16 Oct
+ 2024 11:48:13 +0000
+Received: from PN1PEPF000062BA.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:25:cafe::e4) by PN2PR01CA0025.outlook.office365.com
+ (2603:1096:c01:25::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18 via Frontend
+ Transport; Wed, 16 Oct 2024 11:48:13 +0000
+Authentication-Results: spf=pass (sender IP is 199.15.214.202)
+ smtp.mailfrom=bounce4.email.microsoft.com; dkim=pass (signature was verified)
+ header.d=email.microsoft.com;dmarc=pass action=none
+ header.from=email.microsoft.com;compauth=pass reason=100
+Received-SPF: Pass (protection.outlook.com: domain of
+ bounce4.email.microsoft.com designates 199.15.214.202 as permitted sender)
+ receiver=protection.outlook.com; client-ip=199.15.214.202;
+ helo=bounce4.email.microsoft.com; pr=C
+Received: from bounce4.email.microsoft.com (199.15.214.202) by
+ PN1PEPF000062BA.mail.protection.outlook.com (10.167.242.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8069.17 via Frontend Transport; Wed, 16 Oct 2024 11:48:12 +0000
+X-MSFBL: uvOuvlsWbofpGsDmJ32Xjn26EOxMHl8hXgkDCn43dxA=|eyJ1IjoiMTU3LUdRRS0
+	zODI6MDoyMTE1NDkzOjg1MzIzNDI6MTkzMTQyNzI6MTg1OTg1MDo5OjY1Mzc0MTI
+	6MTY2OTUwMTgxNS0yNTUiLCJnIjoiYmctc2pkLTkyIiwiciI6InRlamVzd2FyYXJ
+	hby5jQGtzaGVtYS5jbyIsImIiOiJkdnAtMTk5LTE1LTIxNC0yMDIifQ==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1729079290;
+	s=m1; d=email.microsoft.com; i=@email.microsoft.com;
+	h=Content-Type:MIME-Version:Subject:To:From:Date;
+	bh=hBmyE8HL3i2a2IOOKYfB5Ttt8ZONKuo1d81IhAI/C+s=;
+	b=vqmrbAP02fTXlMhuIIhMUKkrm8Z2LHPQBJBe5rWH5s9WOhTD3lnuFuXMcAfFFU4U
+	Nn5GXTQrumMH9cZQCV1i+h+giNyhL+KAZ9QC1CrNb2qX1kWSqi53MMr12yCdcuHaZZp
+	/H1NJOnJ4HwMorMY2+Y4gwnyLe+1G5ToohwNOCv8=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1729079290;
+	s=m1; d=mktdns.com; i=@mktdns.com;
+	h=Content-Type:MIME-Version:Subject:To:From:Date;
+	bh=hBmyE8HL3i2a2IOOKYfB5Ttt8ZONKuo1d81IhAI/C+s=;
+	b=lnKaHQ+X9YLd6WPGnpHlcUHvHm4gU3tkTKK4zXvddPP77y24aqH1J6OCwxyeVSEh
+	qy0+M1bVLe4dyDg3qJ03EuWbPmNgux374FrLXUqgz9B2y8h3Y1Ps1G2vpaiEkBFL2Qc
+	Zr280FNX9rTTUn5d/5fZn64k2yvW2FbFe/evJh3M=
+Date: Wed, 16 Oct 2024 06:48:10 -0500 (CDT)
+From: Microsoft Azure Team <azure@email.microsoft.com>
+Reply-To: replyto@microsoft.com
+To: tejeswararao.c@kshema.co
+Message-ID: <558275.100287903.1729079290500@sjmktmail-batch1f.marketo.org>
+Subject: Thanks for joining the Fundamentals training day
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_100287902_1779346296.1729079290500"
+X-Binding: bg-sjd-92
+X-MarketoID: 157-GQE-382:0:2115493:8532342:19314272:1859850:9:6537412:1669501815-255
+X-PVIQ: mkto-157GQE382-000001-000006-537412
+X-Mailfrom: 157-GQE-382.0.6537412.0.0.1859850.9.1669501815-255@bounce4.email.microsoft.com
+X-MktArchive: false
+X-MSYS-API: {"options":{"open_tracking":false,"click_tracking":false}}
+X-MktMailDKIM: true
+Return-Path:
+ 157-GQE-382.0.6537412.0.0.1859850.9.1669501815-255@bounce4.email.microsoft.com
+X-MS-Exchange-Organization-ExpirationStartTime: 16 Oct 2024 11:48:13.4187
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Exchange-Organization-Network-Message-Id:
+ 36d36e5e-77d8-4afd-a38a-08dcedd86a6f
+X-EOPAttributedMessage: 0
+X-EOPTenantAttributedMessage: 225a33a3-a252-427b-a09a-5ae946b50ce4:0
+X-MS-Exchange-Organization-MessageDirectionality: Incoming
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+ PN1PEPF000062BA:EE_|PN3PPFC54389AFF:EE_|MA0P287MB0250:EE_
+X-MS-Exchange-Organization-AuthSource:
+ PN1PEPF000062BA.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Office365-Filtering-Correlation-Id: 36d36e5e-77d8-4afd-a38a-08dcedd86a6f
+X-MS-Exchange-Organization-SCL: 1
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|12012899012|13012899012|5082899009|13102899012|6062899009|4092899012|1032899013|3092899012|69100299015|2092899012|3072899012|5062899012|5083199018;
+X-Forefront-Antispam-Report:
+ CIP:199.15.214.202;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:bounce4.email.microsoft.com;PTR:bounce4.email.microsoft.com;CAT:NONE;SFS:(13230040)(12012899012)(13012899012)(5082899009)(13102899012)(6062899009)(4092899012)(1032899013)(3092899012)(69100299015)(2092899012)(3072899012)(5062899012)(5083199018);DIR:INB;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 11:48:12.5281
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36d36e5e-77d8-4afd-a38a-08dcedd86a6f
+X-MS-Exchange-CrossTenant-Id: 225a33a3-a252-427b-a09a-5ae946b50ce4
+X-MS-Exchange-CrossTenant-AuthSource:
+ PN1PEPF000062BA.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PPFC54389AFF
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:04.5852650
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.8048.020
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UUdIN3dXMlh6K3BuWWhKVG1zRk1TeUpOOS9UWng4ZFJHYklLVENCU1BlaWY0?=
+ =?utf-8?B?S0NQR2dIeXFrR3pVS1E1cnRTdzRZQW9IcEdYMFVGSFgrWDZacHRsdkM2dnVj?=
+ =?utf-8?B?Uk9oZTJhYjY5TXhFUUhEN2pTZ1kxWHpyLzZKb0ZEUHJKM0lMUlpiZkxrR1ZZ?=
+ =?utf-8?B?UGlCK3dhV2dVNzc4Qkgrb3BNaW9hRkFLenovTHpEWCtONjRIZ2t1NGV0RkZu?=
+ =?utf-8?B?NWFCdExYejMvVmMvR1l0cndFRmViS1ZJSE1rSTMrUktxNCt5cUs4WUh2Tzd4?=
+ =?utf-8?B?UXQ3REFPWVVCamxTRklvM3NaNUNnTFZRbjRCWFB4ZDgvRTJlaFVHR3lWUG9I?=
+ =?utf-8?B?TG5PTlI2ZnZqTWpEWTJSZFUrQSs0RTE4TlVuMldWVjdud3grQUVDbkhBeGxo?=
+ =?utf-8?B?NHh0SlhNTWtkM2h1cUxUOUE5NTVQbHpLdlQyQk5vbWpWc0pjWXR2OGZYS3dB?=
+ =?utf-8?B?WldDQmp4cTRTNDZUOSszZVk4Vy9leFBQSVpURHc5S1cxNktGK3ZrOXlJQU9t?=
+ =?utf-8?B?emhyUlBWb3RSUU1sMXhpRFZ0NnZIZE8vTjRjNXYyVDU0UFFSTjVsR3pJVWNu?=
+ =?utf-8?B?R09zRjc0V2ZHL3B3MjJTdGpsZW5lWUFhWVlETXE0bzI3UGgvUkRhWWhUSUlI?=
+ =?utf-8?B?YTVDUmdyTlV1d0FuVnNmWnhtU01RU0MyRHJJQ2xoYkxPRktjeWRBTEtqVURJ?=
+ =?utf-8?B?bVdFZGtJYW5wUWd0em8wZEpKd3Q1N1lkYmE4SWFOOXRsNXREMGdKaUFqMzNs?=
+ =?utf-8?B?L1UyMXlia0lpL2ZRWk9UZ242OGsrVTV5V2pDUy9BaVpIc2cxZFJDNytDdTdv?=
+ =?utf-8?B?QVlNb2JubUZCcWpHVFNCS3ExQlB2RmVVSFQ5L0htRG9GMkVwRGVuN2xGRXlr?=
+ =?utf-8?B?YjhpaitRYnN5ZDFBN1hXMlYzemRrTDZjNEFuU1NTcEQxdVR0d0t3aGRFWVoz?=
+ =?utf-8?B?MDkxdmljK0lVK09KSmJYMVVrSlozcGdQMHhONE9GcWgyTDdiLzVZV0wvMEJC?=
+ =?utf-8?B?YjFSWFZhNk9aWHNWNU1pSHlMcUdjSzlvN3VBcVppbUp3dXBwOWI3L2w1dDhm?=
+ =?utf-8?B?dmpueDVmSU1Fcm5OaHFKS2dBNWV2Sld6SE5JOWNEK2g2VjRDSFFOQ3hJemhw?=
+ =?utf-8?B?T0lIOVJWZ21jZnVyUDJPUCt3Sy9XZjA4elIzbE5yb1ExTGwvMkxzVVBldjdu?=
+ =?utf-8?B?TEY5YTZmdVlUcklRT0lUSmZEdVMvcWU5bytVUnhzZjJOcFJwci9PUjlPVko1?=
+ =?utf-8?B?SjJmYlNySy95NXJwR1ViWGZZMDlsVFpWUkw5SFhpUS9ibmFVMVZKa2RIbUtE?=
+ =?utf-8?B?Z0U3dmUrVnArdm9jZWthcmQ2bVBoSjBFMEVsRDB4bjRpNzNVUEFtc2tjS1ln?=
+ =?utf-8?B?d2Jpcngwc1cxRGFnQTZvVkJJR3J4QnVTZW5LeEhtYllEdm1pNXpJWjRTT1c2?=
+ =?utf-8?B?VFYzNnduclNiZ090RlFDRlRwM2Vwa2FpZWZ4TW1JSjRpNjNxL3ZEVlphdW5u?=
+ =?utf-8?B?aFlkU25JWCtOV1YzUHlLdm5DTlVVRHBuSUtBTkk3QzZ3UWlkekpKUDVKdTJx?=
+ =?utf-8?B?V0JWcENHZGxZdjE4dHRLMGF6NjMrNktyWlZFSmdFWFR1UWlBbFF3Yk9pVHR6?=
+ =?utf-8?B?eVVDZ3lFTE1lR016Wlp4QTA2TkhReGNFVURjeG5TV2t0aFVtMkwwbHpPMGlP?=
+ =?utf-8?B?eHRmY1J0d05YY1lDNFd5VjV4bFV4S3Jpb2lFWVdWZENvSjcwaEg2MThWRFVm?=
+ =?utf-8?B?Y21GWnBFbEEyczVBMlM3ZkVjYW9DMkJkelpDVTdBR2VhQTlVbVAvUHUvQnFt?=
+ =?utf-8?B?SGJlUm55Nk1QaStSOUdadkZQN0o0QVNkQXZuUEpTNm5qbTYwYVVDUFU5dnVz?=
+ =?utf-8?B?S0xqeEtoelAwd1cxR2VRWEUrTUd1TmdsYXRVdkoveTZFd3pJUS96T29maCsv?=
+ =?utf-8?B?aThmanNEbnJOSGhPcGJFTDRNcXRTNU5CRnI5SVFHK0FlenJ3SWhOaUVYREFD?=
+ =?utf-8?B?RnRsYVprZGRQUnZ0ZllGODdDMTJRWVB5RDJkU3FTZkNZdFFCOG9ic2hHMTFw?=
+ =?utf-8?B?MFNPckppUnR5aDNPekRaaTh4ajUrV0VFVFJJM0RMYWp5Z0w1eHlyMUYrRnpV?=
+ =?utf-8?B?WnU1NDcyZlRrbGZ3VnZvSmEyTlVxQmxhcnN6cTlGc0xVMzRoK3hJanljaVZh?=
+ =?utf-8?B?VXlpeCs3Q25QdGV0c3dLcXc3SWhmdEplVEhJc3JPRGxoaWQyN0xybFRCZEhV?=
+ =?utf-8?B?ekxoZVNtMmpQOGdyN3Irb2FIaUtUMk9CcGlENkYvKzdmaHdYVGNUeWNPWk1I?=
+ =?utf-8?B?aGJpaWxCUTBqeXM3QUg2L3JVYUQyY0ZQbEV3Ly9VajZnS2xuUnBtMzJkU1p5?=
+ =?utf-8?B?SGMyQ2tYaE5wN0VvZVFMb05sVlNVRnpGWis3a3I3bXZlRzAxSFl3Y2p6azNq?=
+ =?utf-8?B?ZG5HdktSR2c1eU81RXJ6VGtIVG5EMnJkemthOFRwaC9Od3IxVlpIQU1uUE9z?=
+ =?utf-8?Q?etdFOCRlBa6?=
+MIME-Version: 1.0
+
+------=_Part_100287902_1779346296.1729079290500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Microsoft Azure Virtual Training Day: Fundamentals
+Having trouble viewing this email? | View as web page<https://emails.micros=
+oft.com/v/MTU3LUdRRS0zODIAAAGWNCDagXpnsi_tYDUswmEKIFO06W3cNKyloivUHTMGEZmX4=
+3CaCbp5HrWovDNhEdTJaT71NFg=3D>
+[Microsoft Azure]<https://azure.microsoft.com>  <https://azure.microsoft.co=
+m>
+
+Microsoft Azure Virtual Training Day:
+Fundamentals
+
+[https://info.microsoft.com/rs/157-GQE-382/images/FY23%20MVTD%20Transaction=
+al%20Comms%20Email_Banner_600x100ltr.png]
+
+
+Thank you for attending Azure Fundamentals from Microsoft Learn. We hope yo=
+u=E2=80=99re inspired to put your new knowledge to work as you continue to =
+create impact and opportunities in your career. The presentation deck is av=
+ailable for download here.<https://emails.microsoft.com/MTU3LUdRRS0zODIAAAG=
+WNCDagRXliqg-8sVoB9-YcEO5q9gfWa7cG_VOpQ6bciSSawsOYpoJNCY6NugbBfOIpBdFtUw=3D=
+>
+
+Now that you have completed this training, you are eligible to take the Azu=
+re Fundamentals certification exam<https://emails.microsoft.com/MTU3LUdRRS0=
+zODIAAAGWNCDagUxPNZNrAl3zGMp4Mbyw6Z5bvLF36lSPQn9BFqkSki3XDaOwOiPhQLvaXdPQov=
+7WcQQ=3D> at 50% off the exam price.
+
+How to redeem your discounted certification exam voucher
+To redeem your voucher, you will register and schedule your exam using the =
+standard process. For detailed information about registering, visit: Regist=
+er and schedule an exam<https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNC=
+DagZunR_mih_QKRmnpm4hlI7eWWkmMqKw22fsLb2aEpkaNvpzNjhvmv4BQwD3FpAVT04I=3D>.
+
+On the screen where you enter payment and billing information, select =E2=
+=80=9CAdd Voucher or Promo Code=E2=80=9D, and follow the on-screen instruct=
+ions to redeem your voucher.
+
+Voucher Code
+The voucher code listed below is your personal code and is not transferable=
+ and can=E2=80=99t be replaced if lost or stolen. Please be sure to save it=
+.
+
+For issues with your exam redemption, please visit Microsoft Certification =
+Training Support<https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagaLwI=
+C7K7IL8RXCIa4Ejg9H3cMXl-habmoliiFH7c0ghYlWQVh6zUtq3aDuaSKBFtx8=3D> and sear=
+ch for the topic you need assistance with. For questions about discounted e=
+xam eligibility, scheduling, or expirations, please review the FAQ<https://=
+emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagZxqVTqc-KRI_ZDFId8nXeXQPm3IZj=
+1rynS1CoWAJhFN8rZ45ZDBJ_JXGHaFToTuBpY=3D>.
+
+We invite you to continue your learning:
+
+  *   Check out the Microsoft Learn Collection<https://emails.microsoft.com=
+/MTU3LUdRRS0zODIAAAGWNCDagU9FWMXGrSgGU9wfU0r0CaaAff7QZUllmxj0oQDym_cluDauiL=
+dPkJgHal9LOpiyqAQ=3D> for a curated set of resources on the topics covered =
+in this training.
+
+We look forward to seeing you at future events.<https://emails.microsoft.co=
+m/MTU3LUdRRS0zODIAAAGWNCDagSCjCDLrwBCGHrgDrASmrVAl9uytVfy-zppqGKLQnHsqmC7PN=
+ni0HHs_YsBREdTsstQ=3D>
+
+Here is your unique voucher code: MSE21348891A
+
+
+
+
+
+
+
+Privacy Statement<https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagcwB=
+IEdyuKop2_Dyn-ef5efi4RcuNjub8HHnJzVPRwyMqR8OcYrhv1gSjf3nz4L0zE0=3D>
+
+
+
+Microsoft Corporation
+One Microsoft Way
+Redmond, WA 98052
+
+
+
+[Microsoft]<https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagcf7eS3PjD=
+ilS5rLM_RYOI93SgrI2kC-uZVkIf7Sn2U9KAXVAu0ADDNQeEIRhnLo_5w=3D>
+
+
+
+<https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagYGARjoEmcf-IMJyCWQKx=
+TT9Z01hWcLvKLYgutTsGc_19h0FI0fpI3nIyeI6xbextp8=3D> ------------------------=
+------------------------------------------------------------------- This co=
+mmunication (and any attachments) is directed in confidence solely for the =
+use of the addressee(s) listed herein above and may contain privileged and/=
+or confidential information which must not otherwise be distributed, copied=
+ or used. The contents of this communication may also be classified and sub=
+ject to privilege, and all rights to that privilege are expressly claimed a=
+nd not waived. If you have received this communication in error, please not=
+ify the sender by reply e-mail or by telephone and delete this communicatio=
+n (and any attachments) without making a copy and destroy any copies or pri=
+ntouts thereof. WARNING: - This transmission cannot be guaranteed to be sec=
+ure or error-free as information could be intercepted, corrupted, lost, des=
+troyed, belated or incomplete, or may contain viruses. Before opening or us=
+ing attachments, the recipient should check them for the presence of viruse=
+s and defects. Kshema General Insurance Limited or their subsidiaries or af=
+filiates or employees either jointly or severally, therefore do not accept =
+any liability whatsoever in connection with computer virus, data corruption=
+, delay, interruption, unauthorised access or unauthorised amendment regard=
+less of whether in whole or in part thereof or in any which way.
+
+------=_Part_100287902_1779346296.1729079290500
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!doctype html><html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:v=3D"urn:=
+schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:offi=
+ce"><head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
+<meta name=3D"format-detection" content=3D"telephone=3Dno">
+<meta name=3D"format-detection" content=3D"date=3Dno">
+<meta name=3D"format-detection" content=3D"address=3Dno">
+<meta name=3D"format-detection" content=3D"email=3Dno">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1.=
+0">
+<meta name=3D"x-apple-disable-message-reformatting">
+<!--[if mso]>
+<style>
+                .-mso-banner {padding: 0 0 0 1px;border-right:#E3E3E3 1px s=
+olid;}
+        </style>
+<![endif]--><style type=3D"text/css">
+                body{/* font-size:0;line-height:0; */ mso-line-height-rule:=
+exactly;padding:0;margin:0;}
+                table{border-collapse:collapse;margin:0;-ms-text-size-adjus=
+t:auto;-webkit-text-size-adjust:100%;mso-table-lspace:0pt; mso-table-rspace=
+:0pt; border-spacing: 0;}
+                table td {border-collapse:collapse!important; mso-table-lsp=
+ace: 0pt; mso-table-rspace: 0pt;}
+                tr{font-size:0;mso-line-height-alt:0px;mso-margin-top-alt:0=
+px;mso-line-height-rule:exactly;}
+                td{margin:0;padding:0;mso-line-height-rule:exactly;}
+ 				input::-moz-focus-inner{border:0;outline:0;}
+                .hide {display:none !important;}
+                .appleLinksWhite a {color:#ffffff; text-decoration: none;}
+                .rest_paragraph p {margin:0; padding:0; margin-bottom:0;}
+                .gmailfix {
+                 display:none;
+                 display:none!important;
+                }
+                @media screen and (max-device-width:480px),(max-width:480px=
+)
+                {
+                 .mob_full_width{width:100%!important;min-width:100%!import=
+ant;max-width:100%!important;display:table!important;}
+                 .mob_full_width_image{width:100%!important; height:auto!im=
+portant;}
+                 .mob_center{text-align:center!important;}
+                 .mob_padding{padding-left:24px !important;padding-right:24=
+px !important;}
+                 .mob_padding0{padding-left:0!important;padding-right:0!imp=
+ortant;margin-left: 0!important; margin-top: 0px!important;}
+                 .mob_paddingR0{padding-left:10px!important;padding-right:0=
+!important;}
+                 .mob_height{height:auto!important;padding-top:10px!importa=
+nt;}
+                 .mobhide{display:none!important;}
+                 .box_height{height: auto!important;}
+                 .box_mobile_bottom{margin-bottom: 20px;}
+                   .block {width: 100% !important;
+                   display: block !important;}
+                }
+               .mobile-bottom-padding-20 {
+				padding: 0 0 20px 0 !important;
+				}
+               =20
+	div#B-zone-Body a {
+		text-decoration: none;
+		color: #0078D7;
+	}
+</style><!--[if gte mso 9]>
+                <xml>
+                        <o:OfficeDocumentSettings>
+                                <o:AllowPNG/>
+                                <o:PixelsPerInch>96</o:PixelsPerInch>
+                        </o:OfficeDocumentSettings>
+                </xml>
+<![endif]-->
+<title>Microsoft</title>
+</head>
+<body bgcolor=3D"#E3E3E3" leftmargin=3D"0" topmargin=3D"0" marginwidth=3D"0=
+" marginheight=3D"0">
+<!-- Wrapper -->
+<div style=3D"display:none;font-size:1px;color:#ffffff;line-height:1px;max-=
+height:0px;max-width:0px;opacity:0;overflow:hidden;">
+<div class=3D"mktEditable" id=3D"Preheader_Text">Microsoft Azure Virtual Tr=
+aining Day: Fundamentals
+</div>
+</div>
+<table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" alig=
+n=3D"center">
+<tbody>
+<tr>
+<td width=3D"100%" valign=3D"top" bgcolor=3D"#E3E3E3" align=3D"center">
+<table class=3D"mob_full_width" width=3D"640" border=3D"0" cellspacing=3D"0=
+" cellpadding=3D"0" align=3D"center" style=3D"width:640px; min-width:640px;=
+ max-width:640px;">
+<tbody>
+<tr>
+<td bgcolor=3D"#E3E3E3">
+<div class=3D"mktEditable" id=3D"DNT-Header_Text">
+<table width=3D"100%" style=3D"min-width: 100%; width: 100%;" border=3D"0" =
+cellspacing=3D"0" cellpadding=3D"0">
+<tbody>
+<tr>
+<td class=3D"mob_padding" style=3D"padding: 24px 24px 12px 0px;" bgcolor=3D=
+"#e3e3e3">
+<table width=3D"100%" align=3D"center" class=3D"mob_full_width" border=3D"0=
+" cellspacing=3D"0" cellpadding=3D"0">
+<tbody>
+<tr>
+<td align=3D"right" id=3D"webview" style=3D"color: #5e5e5e; font-family: 'S=
+egoe UI', SUWR, Arial, Sans-Serif; font-weight: 400; font-size: 10px; line-=
+height: 12px;">
+Having trouble viewing this email? | <a style=3D"text-decoration: none; bor=
+der-bottom: 1px solid #5E5E5E;" href=3D"https://emails.microsoft.com/v/MTU3=
+LUdRRS0zODIAAAGWNCDagXpnsi_tYDUswmEKIFO06W3cNKyloivUHTMGEZmX43CaCbp5HrWovDN=
+hEdTJaT71NFg=3D" target=3D"_blank">
+<strong style=3D"font-weight: 400; color: #5e5e5e;">View as web page</stron=
+g></a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table align=3D"center">
+<tbody>
+<tr>
+<td bgcolor=3D"#FFFFFF">
+<div class=3D"mktEditable" id=3D"DNT-Header_Logos">
+<table width=3D"100%" style=3D"min-width: 100%; width: 100%;" border=3D"0" =
+cellspacing=3D"0" cellpadding=3D"0">
+<tbody>
+<tr>
+<td>
+<table width=3D"100%" align=3D"center" style=3D"min-width: 100%;" bgcolor=
+=3D"#ffffff" cellspacing=3D"0" cellpadding=3D"0">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"mob_padding" style=3D"padding: 24px 24px 24px 2=
+4px;"><a target=3D"_blank" href=3D"https://azure.microsoft.com"><img width=
+=3D"" height=3D"21" style=3D"display: inline-block;" alt=3D"Microsoft Azure=
+" src=3D"https://info.microsoft.com/rs/157-GQE-382/images/Azure%20New%20Bra=
+nding%20Logo%20h%2021%20px_6.15.18.png" border=3D"0"></a></td>
+<td align=3D"right" class=3D"mob_padding" style=3D"padding: 24px 24px 24px =
+24px; color: #171717; font-size: 25px; line-height: 30px; font-family: 'Seg=
+oe UI',SUWR,Arial,Sans-Serif; font-weight: 400;">
+<a style=3D"text-decoration: none;" href=3D"https://azure.microsoft.com" ta=
+rget=3D"_blank"><strong style=3D"font-weight: 400; color: #171717;"></stron=
+g></a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mktEditable" id=3D"A_zone-Banner">
+<table class=3D"mob_padding mob_full_width" style=3D"background-color: #091=
+F2C; min-width: 640px; width: 640px;" width=3D"640" cellspacing=3D"0" cellp=
+adding=3D"0" border=3D"0" bgcolor=3D"#091F2C" align=3D"center" dir=3D"ltr">
+<tbody>
+<!-- contained headline row -->
+<tr>
+<!--[if (gte mso 9)|(IE)]>=20
+            <td colspan=3D"2" style=3D"padding: 15px 30px 15px 30px; font-f=
+amily: 'Segoe UI', SUWR, Arial, Sans-Serif; font-weight: 400; font-size: 26=
+px; line-height: normal; text-align: left; color: #ffffff; background-color=
+: #091F2C;" bgcolor=3D"#091F2C">
+            <p style=3D"font-family: 'Segoe UI', SUWR, Arial, Sans-Serif; f=
+ont-weight: 400; font-size: 26px; line-height: normal; text-align: left; co=
+lor: #ffffff;">Microsoft Azure Virtual Training Day: </br>Fundamentals</p>
+            </td>
+        <!--[if (!mso)&(!IE)]><!-- -->
+<td colspan=3D"2" style=3D"background-color: #091F2C;" bgcolor=3D"#091F2C">
+<p style=3D"padding: 5px 30px 5px 30px; font-family: 'Segoe UI', SUWR, Aria=
+l, Sans-Serif; font-weight: 400; font-size: 26px; line-height: normal; text=
+-align: left; color: #ffffff;">
+Microsoft Azure Virtual Training Day: <br>
+Fundamentals</p>
+</td>
+<!--<![endif]-->
+</tr>
+<!-- contained full width image row -->
+<tr>
+<!--[if (gte mso 9)|(IE)]>=20
+            <td colspan=3D"2" style=3D"background-color: #091F2C;" bgcolor=
+=3D"#091F2C" align=3D"left"><img width=3D"640" style=3D"height: auto; displ=
+ay: block; width: 640px;" src=3D"https://info.microsoft.com/rs/157-GQE-382/=
+images/FY23 MVTD Transactional Comms Email_Banner_600x100ltr.png" alt=3D"" =
+border=3D"0"/></td>
+  <![endif]--><!--[if (!mso)&(!IE)]><!-- -->
+<td colspan=3D"2" style=3D"background-color: #091F2C;" bgcolor=3D"#091F2C" =
+align=3D"left">
+<img style=3D"height: auto; display: block; width: 100%;" src=3D"https://in=
+fo.microsoft.com/rs/157-GQE-382/images/FY23 MVTD Transactional Comms Email_=
+Banner_600x100ltr.png" alt=3D"" width=3D"100%" border=3D"0"></td>
+<!--<![endif]-->
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mktEditable" id=3D"Emergency_Message_Zone"><!--[if (gte mso 9=
+)|(IE)]>=20
+
+<![endif]--><!--[if (!mso)&(!IE)]><!-- -->
+<div height=3D"0" style=3D"font-size: 0px; line-height: 0px;">&nbsp;</div>
+<!--<![endif]--></div>
+<div class=3D"mktEditable" id=3D"B_zone-Body">
+<table class=3D"deviceWidth" style=3D"background-color: #ffffff;" width=3D"=
+640" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" bgcolor=3D"#ffffff" a=
+lign=3D"center">
+<tbody>
+<tr>
+<td colspan=3D"2" class=3D"td-pad" style=3D"padding: 15px 30px; font-family=
+: 'Segoe UI', SUWR, Arial, Sans-Serif; font-weight: 400; font-size: 13px; l=
+ine-height: 18px; color: #222222; text-align: left;" width=3D"100%" bgcolor=
+=3D"#ffffff">
+<p style=3D"font-family: 'Segoe UI', SUWR, Arial, Sans-Serif; font-weight: =
+400; font-size: 13px; line-height: 20px; margin: 0px; color: #222222; text-=
+align: left;">
+</p>
+<p>Thank you for attending Azure Fundamentals from Microsoft Learn. We hope=
+ you=E2=80=99re inspired to put your new knowledge to work as you continue =
+to create impact and opportunities in your career. The presentation deck is=
+ available for download
+<a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagRXliqg-8sV=
+oB9-YcEO5q9gfWa7cG_VOpQ6bciSSawsOYpoJNCY6NugbBfOIpBdFtUw=3D" alt=3D"">
+here.</a></p>
+<p>Now that you have completed this training, you are eligible to take the =
+<a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagUxPNZNrAl3=
+zGMp4Mbyw6Z5bvLF36lSPQn9BFqkSki3XDaOwOiPhQLvaXdPQov7WcQQ=3D" alt=3D"">
+Azure Fundamentals certification exam</a> at 50% off the exam price.</p>
+<p><b>How to redeem your discounted certification exam voucher</b><br>
+To redeem your voucher, you will register and schedule your exam using the =
+standard process. For detailed information about registering, visit:
+<a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagZunR_mih_Q=
+KRmnpm4hlI7eWWkmMqKw22fsLb2aEpkaNvpzNjhvmv4BQwD3FpAVT04I=3D" alt=3D"">
+Register and schedule an exam</a>.</p>
+<p>On the screen where you enter payment and billing information, select =
+=E2=80=9CAdd Voucher or Promo Code=E2=80=9D, and follow the on-screen instr=
+uctions to redeem your voucher.</p>
+<p><b>Voucher Code</b><br>
+The voucher code listed below is your personal code and is not transferable=
+ and can=E2=80=99t be replaced if lost or stolen. Please be sure to save it=
+.</p>
+<p>For issues with your exam redemption, please visit <a href=3D"https://em=
+ails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagaLwIC7K7IL8RXCIa4Ejg9H3cMXl-hab=
+moliiFH7c0ghYlWQVh6zUtq3aDuaSKBFtx8=3D" alt=3D"">
+Microsoft Certification Training Support</a> and search for the topic you n=
+eed assistance with. For questions about discounted exam eligibility, sched=
+uling, or expirations, please review
+<a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagZxqVTqc-KR=
+I_ZDFId8nXeXQPm3IZj1rynS1CoWAJhFN8rZ45ZDBJ_JXGHaFToTuBpY=3D" alt=3D"">
+the FAQ</a>. </p>
+<p>We invite you to continue your learning: </p>
+<ul>
+<li>Check out the <a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAA=
+AGWNCDagU9FWMXGrSgGU9wfU0r0CaaAff7QZUllmxj0oQDym_cluDauiLdPkJgHal9LOpiyqAQ=
+=3D" alt=3D"">
+Microsoft Learn Collection</a> for a curated set of resources on the topics=
+ covered in this training.</li></ul>
+<p></p>
+<p>We look forward to seeing you at <a href=3D"https://emails.microsoft.com=
+/MTU3LUdRRS0zODIAAAGWNCDagSCjCDLrwBCGHrgDrASmrVAl9uytVfy-zppqGKLQnHsqmC7PNn=
+i0HHs_YsBREdTsstQ=3D" alt=3D"">
+future events.</a></p>
+<br>
+Here is your unique voucher code: MSE21348891A
+<p></p>
+</td>
+</tr>
+<tr>
+<td align=3D"center">
+<p><br>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mktEditable rest_paragraph" id=3D"C_zone-CTA"><!--[if (gte ms=
+o 9)|(IE)]>=20
+
+<![endif]--><!--[if (!mso)&(!IE)]><!-- -->
+<div height=3D"0" style=3D"font-size: 0px; line-height: 0px;">&nbsp;</div>
+<!--<![endif]--></div>
+<div class=3D"mktEditable rest_paragraph" id=3D"D_zone-Related_Resources"><=
+!--[if (gte mso 9)|(IE)]>=20
+
+<![endif]--><!--[if (!mso)&(!IE)]><!-- -->
+<div height=3D"0" style=3D"font-size: 0px; line-height: 0px;">&nbsp;</div>
+<!--<![endif]--></div>
+<div class=3D"mktEditable rest_paragraph" id=3D"E_zone-CTA"><!--[if (gte ms=
+o 9)|(IE)]>=20
+
+<![endif]--><!--[if (!mso)&(!IE)]><!-- -->
+<div height=3D"0" style=3D"font-size: 0px; line-height: 0px;">&nbsp;</div>
+<!--<![endif]--></div>
+<!-- Footer: Legal message and address-->
+<table bgcolor=3D"#5E5E5E" width=3D"640" style=3D"width:640px;" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" class=3D"mob_padding=
+0 mob_full_width">
+<tbody>
+<tr>
+<td class=3D"mob_padding0" style=3D"padding:24px 24px 24px 24px;" bgcolor=
+=3D"#F2F2F2">
+<table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" styl=
+e=3D"width:100%; min-width:100%; ">
+<tbody>
+<tr>
+<td class=3D"mob_padding" align=3D"left" style=3D"font-family: 'Segoe UI', =
+SUWR, Arial, Sans-Serif; font-weight: 400; font-size:10px; line-height:12px=
+; color:#5E5E5E;">
+<div class=3D"mktEditable rest_paragraph" id=3D"DNT-Social"><!--[if (gte ms=
+o 9)|(IE)]>=20
+
+<![endif]--><!--[if (!mso)&(!IE)]><!-- -->
+<div height=3D"0" style=3D"font-size: 0px; line-height: 0px;">&nbsp;</div>
+<!--<![endif]--></div>
+</td>
+</tr>
+<tr>
+<td class=3D"mob_padding" align=3D"left" style=3D"font-family: 'Segoe UI', =
+SUWR, Arial, Sans-Serif; font-weight: 400; font-size:10px; line-height:12px=
+; color:#5E5E5E;">
+<div class=3D"mktEditable rest_paragraph" id=3D"DNT-Footer">
+<div align=3D"left" class=3D"rest_paragraph">
+<p style=3D"color: #5e5e5e; font-family: 'Segoe UI', SUWR, Arial, Sans-Seri=
+f; font-weight: 400;">
+<a style=3D"text-decoration: none; color: #0078d7;" href=3D"https://emails.=
+microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagcwBIEdyuKop2_Dyn-ef5efi4RcuNjub8HHnJ=
+zVPRwyMqR8OcYrhv1gSjf3nz4L0zE0=3D" target=3D"_blank"><strong style=3D"color=
+: #0078d7; font-weight: 400;">Privacy Statement</strong></a></p>
+<p style=3D"color: #5e5e5e; font-family: 'Segoe UI', SUWR, Arial, Sans-Seri=
+f; font-weight: 400;">
+&nbsp;</p>
+<p style=3D"color: #5e5e5e; font-family: 'Segoe UI', SUWR, Arial, Sans-Seri=
+f; font-weight: 400;">
+Microsoft Corporation<br>
+One Microsoft Way<br>
+Redmond, WA 98052</p>
+<p style=3D"color: #5e5e5e; font-family: 'Segoe UI', SUWR, Arial, Sans-Seri=
+f; font-weight: 400;">
+&nbsp;</p>
+<p><a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagcf7eS3P=
+jDilS5rLM_RYOI93SgrI2kC-uZVkIf7Sn2U9KAXVAu0ADDNQeEIRhnLo_5w=3D" target=3D"_=
+blank"><img width=3D"75" height=3D"16" align=3D"left" alt=3D"Microsoft" src=
+=3D"https://info.microsoft.com/rs/157-GQE-382/images/EN-BASICE-Logo-MSFTLog=
+o.png" border=3D"0"></a></p>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td height=3D"48" style=3D"font-size: 1px; line-height: 48px; font-family: =
+'Segoe UI', SUWR, Arial, Sans-Serif; font-weight: 300;">
+&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<div class=3D"gmailfix" style=3D"white-space:nowrap; font:15px courier; lin=
+e-height:0;">
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+<a href=3D"https://emails.microsoft.com/MTU3LUdRRS0zODIAAAGWNCDagYGARjoEmcf=
+-IMJyCWQKxTT9Z01hWcLvKLYgutTsGc_19h0FI0fpI3nIyeI6xbextp8=3D"></a><img src=
+=3D"https://emails.microsoft.com/trk?t=3D1&amp;mid=3DMTU3LUdRRS0zODIAAAGWNC=
+DagXQxakDblP4JF19dRdzzuSPtSJix_CiToVEyHTZvzDEcvcuSRc62IfZcHDsbUBPIS7G6dlciO=
+jqFFm6cyH6x8xFzsKtH-sdT0zCwl73pAqgMl5TiPDPuV3mrPe9oYpmzNL-OQT-lmHQ3l2Z_wI3C=
+Rk1jSHpIOMSbuugPBVs" width=3D"1" height=3D"1" style=3D"display:none !import=
+ant;" alt=3D"">
+ --------------------------------------------------------------------------=
+----------------- This communication (and any attachments) is directed in c=
+onfidence solely for the use of the addressee(s) listed herein above and ma=
+y contain privileged and/or confidential
+ information which must not otherwise be distributed, copied or used. The c=
+ontents of this communication may also be classified and subject to privile=
+ge, and all rights to that privilege are expressly claimed and not waived. =
+If you have received this communication
+ in error, please notify the sender by reply e-mail or by telephone and del=
+ete this communication (and any attachments) without making a copy and dest=
+roy any copies or printouts thereof. WARNING: - This transmission cannot be=
+ guaranteed to be secure or error-free
+ as information could be intercepted, corrupted, lost, destroyed, belated o=
+r incomplete, or may contain viruses. Before opening or using attachments, =
+the recipient should check them for the presence of viruses and defects. Ks=
+hema General Insurance Limited or
+ their subsidiaries or affiliates or employees either jointly or severally,=
+ therefore do not accept any liability whatsoever in connection with comput=
+er virus, data corruption, delay, interruption, unauthorised access or unau=
+thorised amendment regardless of
+ whether in whole or in part thereof or in any which way.
+</body>
+</html>
+
+------=_Part_100287902_1779346296.1729079290500--
